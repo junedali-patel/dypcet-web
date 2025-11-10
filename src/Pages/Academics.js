@@ -29,7 +29,6 @@ import {
   Computer as ComputerIcon,
   Engineering as EngineeringIcon,
   Science as ScienceIcon,
-  Business as BusinessIcon,
   Apartment as ApartmentIcon
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -92,7 +91,6 @@ const departments = [
 ];
 
 function Academics() {
-  const theme = useTheme();
 
   return (
     <Box className="academics-page">
