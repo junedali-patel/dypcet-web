@@ -14,8 +14,7 @@ import {
   Paper,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
-  useTheme
+  AccordionDetails
 } from '@mui/material';
 import { 
   School as SchoolIcon,
@@ -86,7 +85,7 @@ const departments = [
   { name: 'Data Science & Engineering', icon: <ComputerIcon /> },
   { name: 'Artificial Intelligence & Machine Learning', icon: <ComputerIcon /> },
   { name: 'Mechanical Engineering', icon: <EngineeringIcon /> },
-  { name: 'Electronics & Telecommunication', icon: <ScienceIcon /> },
+  { name: 'Electronics & Telecommunication', icon: <EngineeringIcon /> },
   { name: 'Civil Engineering', icon: <ApartmentIcon /> },
 ];
 
