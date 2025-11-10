@@ -27,7 +27,6 @@ import {
   Assessment as AssessmentIcon,
   Computer as ComputerIcon,
   Engineering as EngineeringIcon,
-  Science as ScienceIcon,
   Apartment as ApartmentIcon
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
