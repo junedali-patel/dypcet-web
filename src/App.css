@@ -1,0 +1,106 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.navbar {
+  background-color: #143c74ff; /* Deep blue */
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.navbar img{
+  margin-left: 15px;
+}
+
+.navbar h2 {
+  font-weight: 700;
+  font-size: 1.9rem;
+  letter-spacing: 1.5px;
+  margin-right: 100px;
+  cursor: default;
+  user-select: none;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  position: relative;
+}
+
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-links li a:hover,
+.nav-links li a:focus {
+  color: #ffcc00; /* Bright gold/yellow accent */
+  border-bottom: 2px solid #ffcc00;
+  outline: none;
+}
+
+.nav-links li a.active {
+  color: #ffcc00;
+  border-bottom: 2px solid #ffcc00;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+}
+
+
+.page {
+  padding: 2rem;
+}
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* full viewport height */
+}
+
+.content {
+  flex: 1; /* take all remaining space */
+}
+
+.footer {
+  background-color: #282c34;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  
+}
+

@@ -1,0 +1,1150 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Box, 
+  Container, 
+  Typography, 
+  Button, 
+  Grid, 
+  Card, 
+  CardContent, 
+  CardMedia, 
+  IconButton, 
+  Avatar,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { 
+  KeyboardArrowLeft, 
+  KeyboardArrowRight, 
+  School, 
+  EmojiEvents, 
+  Group, 
+  Business, 
+  Star, 
+  StarHalf,
+  PlayCircleOutline,
+  EventAvailable,
+  Science,
+  Groups,
+  Work
+} from '@mui/icons-material';
+import CountUp from 'react-countup';
+// Import all available images
+import homeImg from '../Assests/home.jpg';
+import himg from '../Assests/himg.png';
+import aboutImg from '../Assests/aboutImg.jpg';
+import image1 from '../Assests/image1.jpg';
+import image2 from '../Assests/image2.jpg';
+import image3 from '../Assests/image3.jpg';
+import image4 from '../Assests/image4.jpg';
+import image5 from '../Assests/image5.jpg';
+import '../styles/Home.css';
+
+// Carousel slides with all available images
+const sliderImages = [
+  { 
+    id: 1, 
+    src: homeImg, 
+    alt: 'Campus Overview', 
+    title: 'Welcome to D Y Patil College of Engineering', 
+    subtitle: 'Excellence in Technical Education Since 1984',
+    buttonText: 'Explore Programs'
+  },
+  { 
+    id: 2, 
+    src: image1, 
+    alt: 'Modern Infrastructure', 
+    title: 'State-of-the-Art Infrastructure', 
+    subtitle: 'World-class facilities for holistic development',
+    buttonText: 'Campus Tour'
+  },
+  { 
+    id: 3, 
+    src: image2, 
+    alt: 'Research & Innovation', 
+    title: 'Research & Innovation Hub', 
+    subtitle: 'Pushing the boundaries of technology and knowledge',
+    buttonText: 'Research Centers'
+  },
+  { 
+    id: 4, 
+    src: image3, 
+    alt: 'Student Life', 
+    title: 'Vibrant Campus Life', 
+    subtitle: 'Learning beyond classrooms',
+    buttonText: 'Student Life'
+  },
+  { 
+    id: 5, 
+    src: image4, 
+    alt: 'Placements', 
+    title: 'Excellent Placement Records', 
+    subtitle: 'Top recruiters from leading companies',
+    buttonText: 'Placement Stats'
+  },
+  { 
+    id: 6, 
+    src: image5, 
+    alt: 'Alumni Network', 
+    title: 'Strong Alumni Network', 
+    subtitle: 'Connecting professionals worldwide',
+    buttonText: 'Alumni Connect'
+  },
+  { 
+    id: 7, 
+    src: aboutImg, 
+    alt: 'Sports & Culture', 
+    title: 'Sports & Cultural Activities', 
+    subtitle: 'Nurturing talent beyond academics',
+    buttonText: 'Our Activities'
+  }
+];
+
+// Key features section data
+const features = [
+  {
+    icon: <School fontSize="large" />,
+    title: 'Quality Education',
+    description: 'Industry-aligned curriculum with experienced faculty members and modern teaching methodologies'
+  },
+  {
+    icon: <Science fontSize="large" />,
+    title: 'Research & Innovation',
+    description: 'Cutting-edge research facilities and innovation labs to foster creativity'
+  },
+  {
+    icon: <Work fontSize="large" />,
+    title: 'Placements',
+    description: '90%+ placement rate with top recruiters from leading companies'
+  },
+  {
+    icon: <Groups fontSize="large" />,
+    title: 'Vibrant Campus Life',
+    description: 'Diverse clubs, events, and activities for holistic development'
+  }
+];
+
+// Statistics data
+const statistics = [
+  { count: 5000, suffix: '+', label: 'Students', icon: <Group fontSize="large" /> },
+  { count: 250, suffix: '+', label: 'Expert Faculty', icon: <School fontSize="large" /> },
+  { count: 100, suffix: '+', label: 'Companies Visited', icon: <Business fontSize="large" /> },
+  { count: 50, suffix: '+', label: 'Awards Won', icon: <EmojiEvents fontSize="large" /> }
+];
+
+// Testimonials data
+const testimonials = [
+  {
+    name: 'Rohan Patil',
+    role: 'Alumnus, Google',
+    content: 'The education and opportunities I received at D Y Patil College laid the foundation for my career at Google.',
+    avatar: 'R',
+    rating: 5
+  },
+  {
+    name: 'Junedal Patel',
+    role: 'Research Scholar, MIT',
+    content: 'The research facilities and faculty guidance helped me secure admission to MIT for my PhD.',
+    avatar: 'P',
+    rating: 5
+  },
+  {
+    name: 'Amit Deshmukh',
+    role: 'Entrepreneur',
+    content: 'The entrepreneurial cell at the college helped me turn my startup idea into a successful business.',
+    avatar: 'A',
+    rating: 4.5
+  }
+];
+
+// Upcoming events data
+const upcomingEvents = [
+  {
+    title: 'Tech Symposium 2024',
+    date: '15 DEC',
+    description: 'Annual technical festival showcasing innovation and technology',
+    icon: <Science />
+  },
+  {
+    title: 'Campus Recruitment Drive',
+    date: '20 DEC',
+    description: 'Top companies visiting for campus placements',
+    icon: <Work />
+  },
+  {
+    title: 'Alumni Meet',
+    date: '05 JAN',
+    description: 'Annual alumni gathering and networking event',
+    icon: <Groups />
+  }
+];
+
+// Styled components
+const HeroSection = styled('div')(({ theme }) => ({
+  position: 'relative',
+  height: '80vh',
+  minHeight: '500px',
+  overflow: 'hidden',
+  marginBottom: theme.spacing(6),
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1,
+  },
+}));
+
+const SliderContent = styled('div')({
+  position: 'relative',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  color: 'white',
+  textAlign: 'center',
+  zIndex: 2,
+  padding: '0 20px',
+});
+
+const SliderImage = styled('div')({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  transition: 'opacity 1s ease-in-out',
+  opacity: 0,
+  '&.active': {
+    opacity: 1,
+  },
+});
+
+const FeatureCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-10px)',
+    boxShadow: theme.shadows[8],
+  },
+}));
+
+// Component for rendering star ratings
+const StarRating = ({ rating }) => {
+  const stars = [];
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0;
+  
+  for (let i = 1; i <= 5; i++) {
+    if (i <= fullStars) {
+      stars.push(<Star key={i} color="primary" />);
+    } else if (i === fullStars + 1 && hasHalfStar) {
+      stars.push(<StarHalf key={i} color="primary" />);
+    } else {
+      stars.push(<Star key={i} color="disabled" />);
+    }
+  }
+  
+  return <Box display="flex">{stars}</Box>;
+};
+
+// Animated counter component
+const AnimatedCounter = ({ end, suffix = '', ...props }) => {
+  const [countStart, setCountStart] = useState(false);
+  const counterRef = useRef(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCountStart(true);
+          observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      }
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => {
+      if (counterRef.current) {
+        observer.unobserve(counterRef.current);
+      }
+    };
+  }, []);
+  
+  return (
+    <Box ref={counterRef}>
+      {countStart && (
+        <CountUp 
+          end={end} 
+          duration={2.5} 
+          suffix={suffix}
+          {...props} 
+        />
+      )}
+      {!countStart && <Box component="span" sx={{ visibility: 'hidden' }}>{end}{suffix}</Box>}
+    </Box>
+  );
+};
+
+function Home() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Auto slide functionality
+  useEffect(() => {
+    let slideInterval;
+    
+    if (isAutoPlay) {
+      slideInterval = setInterval(() => {
+        setCurrentSlide((prevSlide) => 
+          prevSlide === sliderImages.length - 1 ? 0 : prevSlide + 1
+        );
+      }, 5000);
+    }
+
+    return () => clearInterval(slideInterval);
+  }, [isAutoPlay]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prevSlide) => 
+      prevSlide === sliderImages.length - 1 ? 0 : prevSlide + 1
+    );
+    setIsAutoPlay(false);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prevSlide) => 
+      prevSlide === 0 ? sliderImages.length - 1 : prevSlide - 1
+    );
+    setIsAutoPlay(false);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+    setIsAutoPlay(false);
+  };
+
+  const renderTestimonialCard = (testimonial, index) => (
+    <Box 
+      key={index} 
+      sx={{ 
+        p: 3, 
+        backgroundColor: 'white',
+        borderRadius: 2,
+        boxShadow: 3,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'transform 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-5px)'
+        }
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>{testimonial.avatar}</Avatar>
+        <Box>
+          <Typography variant="subtitle1" fontWeight={600}>
+            {testimonial.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {testimonial.role}
+          </Typography>
+        </Box>
+      </Box>
+      <StarRating rating={testimonial.rating} />
+      <Typography variant="body1" sx={{ mt: 2, flexGrow: 1 }}>
+        "{testimonial.content}"
+      </Typography>
+    </Box>
+  );
+
+  // Main slider component
+  const renderSlider = () => (
+    <Box 
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      sx={{
+        display: 'flex',
+        transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+        transform: `translateX(-${currentSlide * 100}%)`,
+        height: isSmallMobile ? '50vh' : isMobile ? '60vh' : '85vh',
+        minHeight: isSmallMobile ? '300px' : '500px',
+        maxHeight: '800px',
+      }}
+    >
+      {sliderImages.map((slide) => (
+        <Box 
+          key={slide.id}
+          sx={{
+            flexShrink: 0,
+            width: '100%',
+            position: 'relative',
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${slide.src})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: { xs: 2, sm: 3, md: 4 },
+          }}
+        >
+          <Box 
+            sx={{
+              maxWidth: '1200px',
+              width: '100%',
+                mx: 'auto',
+                textAlign: 'center',
+                color: 'white',
+                textShadow: '1px 1px 3px rgba(0,0,0,0.8)',
+                transform: `scale(${currentSlide === index ? 1 : 0.95})`,
+                opacity: currentSlide === index ? 1 : 0,
+                transition: 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                px: { xs: 1, sm: 2, md: 4 },
+              }}
+            >
+              <Typography 
+                variant={isSmallMobile ? 'h5' : isMobile ? 'h4' : 'h2'} 
+                component="h1"
+                gutterBottom
+                sx={{
+                  fontWeight: 800,
+                  mb: { xs: 2, md: 3 },
+                  lineHeight: 1.2,
+                  '& span': {
+                    color: 'primary.main',
+                    display: 'inline-block',
+                  },
+                }}
+              >
+                {slide.title.split(' ').map((word, i) => (
+                  <Box 
+                    key={i} 
+                    component="span" 
+                    sx={{
+                      display: 'inline-block',
+                      animation: `fadeInUp 0.8s ease-out ${i * 0.1}s both`,
+                    }}
+                  >
+                    {word}{' '}
+                  </Box>
+                ))}
+              </Typography>
+              
+              <Typography 
+                variant={isSmallMobile ? 'subtitle2' : isMobile ? 'subtitle1' : 'h6'} 
+                component="h2"
+                sx={{
+                  mb: { xs: 3, md: 4 },
+                  maxWidth: '800px',
+                  mx: 'auto',
+                  '& span': {
+                    display: 'inline-block',
+                    animation: 'fadeInUp 0.8s ease-out 0.5s both',
+                  },
+                }}
+              >
+                <span>{slide.subtitle}</span>
+              </Typography>
+              
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 2,
+                  justifyContent: 'center',
+                  flexWrap: 'wrap',
+                  '& > *': {
+                    animation: 'fadeInUp 0.8s ease-out 0.7s both',
+                  },
+                }}
+              >
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  size={isMobile ? 'medium' : 'large'}
+                  component={Link}
+                  to="/admissions"
+                  sx={{
+                    px: { xs: 3, md: 4 },
+                    py: { xs: 1, md: 1.5 },
+                    fontSize: { xs: '0.875rem', md: '1.1rem' },
+                    fontWeight: 600,
+                    borderRadius: '50px',
+                    textTransform: 'none',
+                    '&:hover': {
+                      transform: 'translateY(-3px)',
+                      boxShadow: 3,
+                    },
+                    transition: 'all 0.3s ease',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {slide.buttonText}
+                </Button>
+                
+                <Button 
+                  variant="outlined" 
+                  color="inherit"
+                  size={isMobile ? 'medium' : 'large'}
+                  component={Link}
+                  to="/contact"
+                  sx={{
+                    px: { xs: 3, md: 4 },
+                    py: { xs: 1, md: 1.5 },
+                    fontSize: { xs: '0.875rem', md: '1.1rem' },
+                    fontWeight: 600,
+                    borderRadius: '50px',
+                    borderWidth: '2px',
+                    textTransform: 'none',
+                    color: 'white',
+                    borderColor: 'white',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      borderWidth: '2px',
+                      transform: 'translateY(-3px)',
+                    },
+                    transition: 'all 0.3s ease',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Contact Us
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+
+      {/* Navigation Arrows - Only show on larger screens */}
+      {!isMobile && (
+        <>
+          <IconButton
+            onClick={prevSlide}
+            aria-label="Previous slide"
+            sx={{
+              position: 'absolute',
+              left: '20px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              color: 'white',
+              backdropFilter: 'blur(4px)',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                transform: 'translateY(-50%) scale(1.1)',
+              },
+              zIndex: 2,
+              width: '50px',
+              height: '50px',
+              transition: 'all 0.3s ease',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }}
+          >
+            <KeyboardArrowLeft fontSize="large" />
+          </IconButton>
+          <IconButton
+            onClick={nextSlide}
+            aria-label="Next slide"
+            sx={{
+              position: 'absolute',
+              right: '20px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              color: 'white',
+              backdropFilter: 'blur(4px)',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                transform: 'translateY(-50%) scale(1.1)',
+              },
+              zIndex: 2,
+              width: '50px',
+              height: '50px',
+              transition: 'all 0.3s ease',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }}
+          >
+            <KeyboardArrowRight fontSize="large" />
+          </IconButton>
+        </>
+      )}
+
+      {/* Dots Navigation */}
+      <Box 
+        sx={{
+          position: 'absolute',
+          bottom: { xs: '15px', md: '30px' },
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          gap: { xs: 1, md: 1.5 },
+          zIndex: 2,
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          px: { xs: 1.5, md: 2 },
+          py: 0.5,
+          borderRadius: '20px',
+          backdropFilter: 'blur(4px)',
+        }}
+      >
+        {sliderImages.map((_, index) => (
+          <Box
+            key={index}
+            onClick={() => goToSlide(index)}
+            onKeyDown={(e) => e.key === 'Enter' && goToSlide(index)}
+            role="button"
+            tabIndex={0}
+            aria-label={`Go to slide ${index + 1}`}
+            sx={{
+              width: { xs: '10px', md: '12px' },
+              height: { xs: '10px', md: '12px' },
+              borderRadius: '50%',
+              backgroundColor: currentSlide === index ? 'primary.main' : 'rgba(255, 255, 255, 0.5)',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.3)',
+                backgroundColor: 'primary.main',
+              },
+              '&:focus-visible': {
+                outline: '2px solid white',
+                outlineOffset: '2px',
+              },
+            }}
+          />
+        ))}
+          position: 'relative',
+          '&:after': {
+            content: '""',
+            display: 'block',
+            width: '80px',
+            height: '4px',
+            backgroundColor: '#ff5722',
+            margin: '15px auto 0',
+            borderRadius: '2px'
+          }
+        }}>
+          Why Choose Us
+        </Typography>
+        
+        <Grid container spacing={4}>
+          {features.map((feature, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <FeatureCard elevation={3}>
+                <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                  <Box sx={{
+                    width: '80px',
+                    height: '80px',
+                    backgroundColor: 'rgba(26, 35, 126, 0.1)',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 20px',
+                    '& .material-icons': {
+                      fontSize: '40px',
+                      color: '#1a237e'
+                    }
+                  }}>
+                    <span className="material-icons">{feature.icon}</span>
+                  </Box>
+                  <Typography variant="h6" component="h3" gutterBottom sx={{ 
+                    fontWeight: 600,
+                    color: '#1a237e',
+                    mb: 2
+                  }}>
+                    {feature.title}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {feature.description}
+                  </Typography>
+                </CardContent>
+              </FeatureCard>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* Announcements Section */}
+      <Box sx={{ backgroundColor: '#f5f5f5', py: 6 }}>
+        <Container maxWidth="lg">
+          <Typography variant="h4" component="h2" align="center" gutterBottom sx={{ 
+            fontWeight: 700, 
+            color: '#1a237e',
+            mb: 6,
+            position: 'relative',
+            '&:after': {
+              content: '""',
+              display: 'block',
+              width: '80px',
+              height: '4px',
+              backgroundColor: '#ff5722',
+              margin: '15px auto 0',
+              borderRadius: '2px'
+            }
+          }}>
+            Latest News & Events
+          </Typography>
+          
+          <Grid container spacing={4}>
+            {[1, 2, 3].map((item) => (
+              <Grid item xs={12} md={4} key={item}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={item % 2 === 0 ? img1 : img2}
+                    alt="News image"
+                  />
+                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="overline" color="primary" sx={{ fontWeight: 600, mb: 1 }}>
+                      {item === 1 ? 'Admission' : item === 2 ? 'Event' : 'Announcement'}
+                    </Typography>
+                    <Typography variant="h6" component="h3" gutterBottom sx={{ 
+                      fontWeight: 600,
+                      flexGrow: 1
+                    }}>
+                      {item === 1 
+                        ? 'Admissions Open for Academic Year 2024-25' 
+                        : item === 2 
+                        ? 'Annual Technical Symposium - TechVista 2024' 
+                        : 'Campus Recruitment Drive by Top Companies'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {item === 1 
+                        ? 'Applications are now open for all undergraduate and postgraduate programs.' 
+                        : item === 2 
+                        ? 'Join us for the biggest technical event of the year with workshops and competitions.' 
+                        : 'Leading companies will be visiting our campus next month for recruitment.'}
+                    </Typography>
+                    <Button 
+                      variant="text" 
+                      color="primary" 
+                      sx={{ 
+                        alignSelf: 'flex-start',
+                        mt: 'auto',
+                        px: 0,
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: 'transparent',
+                          textDecoration: 'underline'
+                        }
+                      }}
+                    >
+                      Read More →
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+          
+          <Box sx={{ textAlign: 'center', mt: 4 }}>
+            <Button 
+              variant="outlined" 
+              color="primary" 
+              size="large"
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: '50px',
+                fontWeight: 600,
+                textTransform: 'none',
+                fontSize: '1rem',
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                  color: 'white'
+                }
+              }}
+            >
+              View All News & Events
+            </Button>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Quick Links Section */}
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Typography variant="h4" component="h2" align="center" gutterBottom sx={{ 
+          fontWeight: 700, 
+          color: '#1a237e',
+          mb: 6,
+          position: 'relative',
+          '&:after': {
+            content: '""',
+            display: 'block',
+            width: '80px',
+            height: '4px',
+            backgroundColor: '#ff5722',
+            margin: '15px auto 0',
+            borderRadius: '2px'
+          }
+        }}>
+          Quick Links
+        </Typography>
+        
+        <Grid container spacing={4}>
+          {[
+            { title: 'Admissions', icon: 'school', link: '/admissions' },
+            { title: 'Academics', icon: 'menu_book', link: '/academics' },
+            { title: 'Departments', icon: 'account_balance', link: '/departments' },
+            { title: 'Placements', icon: 'work', link: '/placements' },
+            { title: 'Research', icon: 'science', link: '/research' },
+            { title: 'Campus Life', icon: 'groups', link: '/campus-life' },
+          ].map((item, index) => (
+            <Grid item xs={6} sm={4} md={2} key={index}>
+              <Button 
+                component={Link} 
+                to={item.link}
+                variant="outlined"
+                fullWidth
+                sx={{
+                  p: 2,
+                  height: '120px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '8px',
+                  borderColor: '#e0e0e0',
+                  color: '#1a237e',
+                  '&:hover': {
+                    backgroundColor: '#f5f5f5',
+                    borderColor: '#1a237e',
+                  },
+                  '& .material-icons': {
+                    fontSize: '2.5rem',
+                    mb: 1,
+                    color: '#1a237e'
+                  }
+                }}
+              >
+                <span className="material-icons">{item.icon}</span>
+                <Typography variant="subtitle2" align="center">
+                  {item.title}
+                </Typography>
+              </Button>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* Statistics Section */}
+      <Box sx={{ 
+        backgroundColor: 'primary.main', 
+        color: 'white',
+        py: 8,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '20px',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), transparent)'
+        }
+      }}>
+        <Container maxWidth="lg">
+          <Grid container spacing={4} justifyContent="center">
+            {statistics.map((stat, index) => (
+              <Grid item xs={6} sm={3} key={index} sx={{ textAlign: 'center' }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  '&:hover': {
+                    '& .stat-icon': {
+                      transform: 'scale(1.1) rotate(5deg)'
+                    }
+                  }
+                }}>
+                  <Box 
+                    className="stat-icon"
+                    sx={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mb: 2,
+                      transition: 'all 0.3s ease',
+                      '& .MuiSvgIcon-root': {
+                        fontSize: '2.5rem',
+                        color: 'white'
+                      }
+                    }}
+                  >
+                    {stat.icon}
+                  </Box>
+                  <Typography 
+                    variant="h3" 
+                    component="div" 
+                    sx={{ 
+                      fontWeight: 700,
+                      mb: 1,
+                      background: 'linear-gradient(90deg, #ffffff, #e0e0e0)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}
+                  >
+                    <AnimatedCounter end={stat.count} suffix={stat.suffix} />
+                  </Typography>
+                  <Typography variant="h6">{stat.label}</Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Testimonials Section */}
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Typography variant="h4" component="h2" align="center" gutterBottom sx={{ 
+          fontWeight: 700, 
+          color: 'primary.main',
+          mb: 6,
+          position: 'relative',
+          '&:after': {
+            content: '""',
+            display: 'block',
+            width: '80px',
+            height: '4px',
+            backgroundColor: 'secondary.main',
+            margin: '15px auto 0',
+            borderRadius: '2px'
+          }
+        }}>
+          What Our Students Say
+        </Typography>
+        
+        <Grid container spacing={4}>
+          {testimonials.map((testimonial, index) => (
+            <Grid item xs={12} md={4} key={index}>
+              {renderTestimonialCard(testimonial, index)}
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* Call to Action Section */}
+      <Box sx={{ 
+        backgroundImage: 'linear-gradient(135deg, #1a237e 0%, #283593 100%)', 
+        color: 'white',
+        py: 8,
+        position: 'relative',
+        overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(255,255,255,0.05) 0%, transparent 20%)',
+          zIndex: 1
+        }
+      }}>
+        <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
+          <Box textAlign="center">
+            <Typography variant="h3" component="h2" gutterBottom sx={{ fontWeight: 700, mb: 3 }}>
+              Ready to Start Your Journey?
+            </Typography>
+            <Typography variant="h6" sx={{ mb: 4, maxWidth: '700px', mx: 'auto', opacity: 0.9 }}>
+              Join our community of innovators, thinkers, and leaders. Apply now for the upcoming academic year.
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Button 
+                variant="contained" 
+                color="secondary" 
+                size="large"
+                sx={{ 
+                  px: 4, 
+                  py: 1.5, 
+                  borderRadius: '50px',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: 4
+                  }
+                }}
+              >
+                Apply Now
+              </Button>
+              <Button 
+                variant="outlined" 
+                color="inherit" 
+                size="large"
+                sx={{ 
+                  px: 4, 
+                  py: 1.5, 
+                  border: '2px solid white',
+                  color: 'white',
+                  borderRadius: '50px',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    border: '2px solid white',
+                    transform: 'translateY(-2px)'
+                  }
+                }}
+              >
+                Virtual Tour
+              </Button>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Upcoming Events Section */}
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h4" component="h2" gutterBottom sx={{ 
+              fontWeight: 700, 
+              color: 'primary.main',
+              mb: 4,
+              position: 'relative',
+              '&:after': {
+                content: '""',
+                display: 'block',
+                width: '80px',
+                height: '4px',
+                backgroundColor: 'secondary.main',
+                marginTop: '15px',
+                borderRadius: '2px'
+              }
+            }}>
+              Upcoming Events
+            </Typography>
+            
+            <Box>
+              {upcomingEvents.map((event, index) => renderEventCard(event, index))}
+            </Box>
+            
+            <Box textAlign="center" mt={4}>
+              <Button 
+                variant="outlined" 
+                color="primary" 
+                endIcon={<EventAvailable />}
+                sx={{ 
+                  borderRadius: '50px',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  px: 4,
+                  '&:hover': {
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                    transform: 'translateY(-2px)'
+                  }
+                }}
+              >
+                View All Events
+              </Button>
+            </Box>
+          </Grid>
+          
+          <Grid item xs={12} md={6}>
+            <Box sx={{ 
+              height: '100%', 
+              borderRadius: 2, 
+              overflow: 'hidden',
+              boxShadow: 3,
+              position: 'relative',
+              '&:hover': {
+                '& .play-button': {
+                  transform: 'scale(1.1)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)'
+                }
+              }
+            }}>
+              <Box 
+                component="img"
+                src={img2}
+                alt="Campus Tour"
+                sx={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover',
+                  minHeight: isMobile ? '300px' : '100%'
+                }} 
+              />
+              <Box 
+                className="play-button"
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 80,
+                  height: 80,
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(5px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)'
+                  }
+                }}
+              >
+                <PlayCircleOutline sx={{ fontSize: 60, color: 'white' }} />
+              </Box>
+              <Box 
+                sx={{ 
+                  position: 'absolute', 
+                  bottom: 0, 
+                  left: 0, 
+                  right: 0, 
+                  p: 3,
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
+                  color: 'white'
+                }}
+              >
+                <Typography variant="h5" component="h3" gutterBottom>
+                  Take a Virtual Tour
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 2 }}>
+                  Explore our state-of-the-art campus facilities and vibrant student life from the comfort of your home.
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+}
+
+export default Home;
